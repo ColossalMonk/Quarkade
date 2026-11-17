@@ -43,7 +43,7 @@ All titles are working titles. Before a game is released, check its name on the 
 | hc01 | Knotwork ✅ v1.0 built | Sort | Tap | 2.5D | M |
 | hc02 | Density ✅ v1.0 built | Sort | Tap | 2D | M |
 | hc03 | Unbolted ✅ v1.0 built (was "Screwball Workshop") | Sort | Tap | 2D (exact swing, no physics engine) | M |
-| hc04 | Bento Snug | Sort | Drag | 2D | S |
+| hc04 | Snug Bento ✅ v1.0 built (was "Bento Snug") | Sort | Drag | 2D | M |
 | hc05 | Aisle Nine | Sort | Tap | 2.5D | M |
 | hc06 | Outbound | Escape | Tap | 2D | S |
 | hc07 | Harbor Hustle | Escape | Tap | 2.5D | M |
@@ -122,7 +122,7 @@ Unscrew bolts in the right order so metal plates swing loose and drop. Each bolt
 - **Look:** flat metal plates, bolts with a little shading, a pegboard background.
 - **Rewarded ad:** an extra toolbox slot. **Haptics:** a ratchet buzz while unscrewing.
 
-#### hc04 · Bento Snug
+#### hc04 · Snug Bento (working title was "Bento Snug")
 Pack every food piece into the bento box with no gaps. When it all fits, the lid closes with a satisfying click.
 - **Play:** drag pieces to place them, tap a piece to rotate it.
 - **Progression:** a menu of box shapes, a collection of themed bentos (picnic, festival, space).

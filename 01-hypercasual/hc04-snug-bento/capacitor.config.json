@@ -1,0 +1,16 @@
+{
+  "appId": "com.quarkade.snugbento",
+  "appName": "Snug Bento",
+  "webDir": "dist/app",
+  "android": {
+    "backgroundColor": "#f3e6c8"
+  },
+  "ios": {
+    "backgroundColor": "#f3e6c8"
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "iconColor": "#d9502e"
+    }
+  }
+}

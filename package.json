@@ -6,7 +6,8 @@
     "forge",
     "01-hypercasual/hc01-knotwork",
     "01-hypercasual/hc02-density",
-    "01-hypercasual/hc03-unbolted"
+    "01-hypercasual/hc03-unbolted",
+    "01-hypercasual/hc04-snug-bento"
   ],
   "devDependencies": {
     "@types/node": "^22.20.5",
