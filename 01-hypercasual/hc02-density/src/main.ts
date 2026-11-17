@@ -9,13 +9,15 @@ import { registerStrings, detectLanguage, setLanguage, t } from "../../../forge/
 import { Rng, seedOf, utcDayKey } from "../../../forge/src/core/rng.ts";
 import { Music } from "../../../forge/src/core/music.ts";
 import { Ui, starsRow, para } from "../../../forge/src/ui/ui.ts";
+import { Coach, showHowToPlay, tipsUpTo } from "../../../forge/src/ui/coach.ts";
 import { AdBudget, interstitialDue } from "../../../forge/src/ui/ads.ts";
 import { buyCard } from "../../../forge/src/ui/buy-card.ts";
 import { showDailyCard as forgeDailyCard, recordDailyWin, currentStreak, dailyShareText } from "../../../forge/src/ui/daily.ts";
 import { showShop as forgeShowShop } from "../../../forge/src/ui/shop.ts";
 import { showSettings as forgeShowSettings } from "../../../forge/src/ui/settings.ts";
 import type { Board, LevelDef, Move, MoveResult } from "./logic/rules.ts";
-import { addSpareFlask, applyMove, centrifuge, cloneBoard, decodeLevel, isStuck, isWon, moveAmount, pipette, revealAll, topRun, usable } from "./logic/rules.ts";
+import { addSpareFlask, applyMove, centrifuge, cloneBoard, decodeLevel, isStuck, isWon, legalMoves, moveAmount, pipette, revealAll, topRun, usable } from "./logic/rules.ts";
+import { INTRO } from "./logic/generator.ts";
 import { getDaily, getLevel, solveInWorker } from "./game/levels.ts";
 import { TowerProgress, collectionOpen, completedCollections, nextTower } from "./game/tower.ts";
 import { defaultSave, SAVE_VERSION } from "./game/save.ts";
@@ -47,6 +49,8 @@ const music = new Music(sfx.synth, LAB_SONG);
 let inModal = false;
 const ui = new Ui({ modalRoot: $("modal-root"), toast: $("toast"), fxLayer: $("fx-layer") });
 ui.onModalChange = (open) => (inModal = open);
+/** Onboarding: queued tips, power-up unlock cards, the pointing hand (forge coach). */
+const coach = new Coach(ui, { root: $("app"), blocked: () => inModal });
 let save!: SaveSlot<SaveData>;
 let tower!: TowerProgress;
 let view!: LabView;
@@ -288,18 +292,62 @@ async function startLevel(n: number, opts: { easier?: boolean; override?: LevelD
   view.build(board, liquidOf);
   view.setHint(null);
   busy = false;
+  coach.clear();
   for (const pu of POWER_UPS) {
     if (n >= pu.unlockLevel && !d().gifted[pu.id]) {
       d().gifted[pu.id] = true;
       d().inv[pu.id] += ECONOMY.freeOnUnlock;
       save.touch();
-      setTimeout(() => toast(t("unlocked", { name: t(`pu_${pu.id}`), n: ECONOMY.freeOnUnlock }), 4200), 300);
+      coach.unlock(pu.icon, t(`pu_${pu.id}`), t(`pu_${pu.id}_desc`), ECONOMY.freeOnUnlock, $("powerups").querySelector<HTMLElement>(`[data-id="${pu.id}"]`));
     }
   }
-  if (EN[`tip_${n}`] && (restarts.get(n) ?? 0) === 0) setTimeout(() => toast(t(`tip_${n}`), 5200), 700);
+  const firstTry = (restarts.get(n) ?? 0) === 0;
+  if (EN[`tip_${n}`] && firstTry) coach.tip(t(`tip_${n}`), { point: introPoint(n) });
+  if (n === 1 && firstTry) coach.pointAt(firstMovePoint);
   renderHud();
   redrawTower();
   if (started && (def.tag === "tricky" || def.tag === "masterpiece") && !lvl.easier && (restarts.get(n) ?? 0) === 0) await offerBoost();
+}
+
+/** Level 1: the hand points at a flask to pick up, then at where to pour it. */
+function firstMovePoint(): { x: number; y: number } | null {
+  if (busy || playMode !== "levels" || def.n !== 1) return null;
+  const moves = legalMoves(board).filter((m) => m.kind === "pour") as Array<{ kind: "pour"; from: number; to: number }>;
+  if (selected >= 0) {
+    const m = moves.find((x) => x.from === selected);
+    return m ? view.flaskTopClient(m.to) : null;
+  }
+  return moves.length ? view.flaskTopClient(moves[0].from) : null;
+}
+
+/** Where the hand points while an intro level's tip is up: the flask showing the new thing. */
+function introPoint(n: number): (() => { x: number; y: number } | null) | undefined {
+  const flaskWhere = (ok: (i: number) => boolean) => () => {
+    if (busy || def.n !== n) return null;
+    const i = board.stacks.findIndex((_, j) => ok(j));
+    return i < 0 ? null : view.flaskTopClient(i);
+  };
+  const hasClass = (c: number) => flaskWhere((i) => board.stacks[i].some((slot) => board.classes[slot] === c));
+  if (n === 4) return hasClass(2);
+  if (n === 7) return hasClass(4);
+  if (n === 15) return flaskWhere((i) => board.hidden[i].some(Boolean));
+  if (n === INTRO.oddCaps) return flaskWhere((i) => board.caps[i] !== 4);
+  if (n === INTRO.cork) return flaskWhere((i) => board.corks[i] > 0);
+  if (n === INTRO.foam) return hasClass(1);
+  if (n === INTRO.mercury) return hasClass(5);
+  return undefined;
+}
+
+/** "How to play": the basics and twists met so far (from the level tips) and unlocked power-ups. */
+function showHelp(): Promise<void> {
+  const level = Math.max(d().level, playMode === "levels" ? def.n : 1);
+  // Tips 8, 25 and 40 only restate a power-up; the power-up section covers those.
+  const tips = tipsUpTo(EN, level, 10, [8, 25, 40]);
+  return showHowToPlay(ui, [
+    { title: t("htpBasics"), items: tips.basics.map((text) => ({ icon: "🧪", text })) },
+    { title: t("htpPowerUps"), items: POWER_UPS.filter((p) => level >= p.unlockLevel || d().gifted[p.id]).map((p) => ({ icon: p.icon, title: t(`pu_${p.id}`), text: t(`pu_${p.id}_desc`) })) },
+    { title: t("htpTwists"), items: tips.twists.map((text) => ({ icon: "✨", text })) },
+  ]);
 }
 
 async function offerBoost(): Promise<void> {
@@ -380,6 +428,7 @@ function refuse(i: number): void {
 
 async function doMove(m: Move): Promise<void> {
   busy = true;
+  coach.stopPointing();
   history.push({ board: cloneBoard(board), moves });
   const fill = board.stacks[m.to].length;
   const res = applyMove(board, m);
@@ -1000,6 +1049,7 @@ function showSettings(): void {
     onChange: () => save.touch(),
     extra: (close) => [
       button(`🛍 ${t("shop")}`, "green", () => (close(), showShop())),
+      button(`❓ ${t("howToPlay")}`, "plain", () => (close(), void showHelp())),
       button(t("resetProgress"), "plain", async () => {
         if (!confirm(t("resetConfirm"))) return;
         await save.reset();
@@ -1028,6 +1078,7 @@ function showTitle(): Promise<void> {
     };
     el.append(button(n > 1 ? t("continueLevel", { n }) : t("play"), "", leave));
     el.append(button(`🧪 ${t("daily")}${d().daily.results[utcDayKey()] ? " ✓" : ""}`, "plain", () => (leave(), void showDailyCard())));
+    el.append(button(`❓ ${t("howToPlay")}`, "plain", () => (leave(), void showHelp())));
     $("modal-root").append(el);
     inModal = true;
     requestAnimationFrame(() => drawTower(tc, tower));

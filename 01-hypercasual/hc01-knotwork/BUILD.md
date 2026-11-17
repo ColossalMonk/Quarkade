@@ -123,6 +123,12 @@ node forge/tools/build-all.ts 01-hypercasual/hc01-knotwork
 - Saves use forge's tamper check: edited saves are ignored. If one copy was edited, the other is used; if both were, the game starts fresh. This was tested in the production build.
 - Old-format saves on the dev servers are discarded once (the games are unreleased, so no players are affected).
 
+## Onboarding (forge coach, 2026-11-17)
+- **Tips:** level tips wait in a queue and show one at a time on a card. They never appear behind the title screen or a window, and a tap dismisses them.
+- **Pointing hand:** on level 1 the hand points at the first move. On each twist's intro level it points at the new thing on the board.
+- **Power-up unlocks:** each one gets a card (what it does, 3 free uses), then its button pulses.
+- **How to play:** in Settings and on the title screen. It lists the basics and the twists met so far (from the level tips) and the power-ups unlocked so far.
+
 ## Differences from DESIGN.md
 - **Undo can't reverse a power-up.** Using a power-up clears the undo history.
 - **No easier next level after a failure.** Levels are fixed in packs. This is replaced by the free hint (sooner for struggling players) and the easier version.

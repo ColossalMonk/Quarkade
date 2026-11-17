@@ -146,6 +146,12 @@ node forge/tools/build-all.ts 01-hypercasual/hc03-unbolted
 - The design's blurred room behind the pegboard (the pegboard fills the view instead).
 - Bolt chips pulled from the tray could fly into the new box (now they just appear).
 
+## Onboarding (forge coach, 2026-11-17)
+- **Tips:** level tips wait in a queue and show one at a time on a card. They never appear behind the title screen or a window, and a tap dismisses them.
+- **Pointing hand:** on level 1 the hand points at the first move. On each twist's intro level it points at the new thing on the board.
+- **Power-up unlocks:** each one gets a card (what it does, 3 free uses), then its button pulses.
+- **How to play:** in Settings and on the title screen. It lists the basics and the twists met so far (from the level tips) and the power-ups unlocked so far.
+
 ## Differences from DESIGN.md
 - **Par comes from a sensible, visible-information player,** not the full-information solver. The solver sees colours under opaque plates, which players can't, so its par would be unfair.
 - **Plates are drilled only where they have fixings.** With every hole cut, bolts on the grid showed through empty holes and almost nothing was covered.

@@ -277,6 +277,13 @@ export class WorkshopView {
     return best;
   }
 
+  /** Any world point on screen (CSS pixels). */
+  worldClient(x: number, y: number): { x: number; y: number } {
+    const p = new THREE.Vector3(x, y, 0).project(this.camera);
+    const r = this.renderer.domElement.getBoundingClientRect();
+    return { x: r.left + ((p.x + 1) / 2) * r.width, y: r.top + ((1 - p.y) / 2) * r.height };
+  }
+
   /** A bolt's position on screen (CSS pixels), for flying chips. */
   boltClient(i: number): { x: number; y: number } {
     const p = new THREE.Vector3(this.bolts[i].pos[0], this.bolts[i].pos[1], 0).project(this.camera);

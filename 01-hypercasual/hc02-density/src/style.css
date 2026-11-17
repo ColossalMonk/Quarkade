@@ -586,3 +586,8 @@ body.wide #side-tower {
   height: 100%;
   display: block;
 }
+
+/* forge coach: where the tip card goes when it would cover the hand target */
+:root {
+  --coach-low: 92px;
+}

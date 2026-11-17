@@ -512,3 +512,8 @@ body[data-board="starry"] #hud-sub {
 body[data-board="starry"] #live-stars i.off {
   color: rgba(255, 243, 223, 0.3);
 }
+
+/* forge coach: where the tip card goes when it would cover the hand target */
+:root {
+  --coach-low: 92px;
+}

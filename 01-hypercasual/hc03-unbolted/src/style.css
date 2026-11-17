@@ -767,3 +767,8 @@ body.wide #hud-sub {
     font-size: 16px;
   }
 }
+
+/* forge coach: where the tip card goes when it would cover the hand target */
+:root {
+  --coach-low: 236px;
+}

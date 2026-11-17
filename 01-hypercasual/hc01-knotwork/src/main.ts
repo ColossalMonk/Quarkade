@@ -25,7 +25,11 @@ import {
   completeColour,
   coloursOf,
   swiftPicks,
+  legalMoves,
+  isTwisted,
+  isTied,
 } from "./logic/rules.ts";
+import { INTRO } from "./logic/generator.ts";
 import { getLevel, getDaily, solveInWorker } from "./game/levels.ts";
 import { Rng, seedOf } from "../../../forge/src/core/rng.ts";
 import { QuiltProgress, albumOpen, completedAlbums, nextPicture } from "./game/quilt.ts";
@@ -33,6 +37,7 @@ import { COSMETICS, DEFAULT_EQUIPPED, ALBUM_STARS, SHOP_LEVEL, albumReward, cosm
 import type { CosmeticSlot } from "./data/cosmetics.ts";
 import { Music } from "../../../forge/src/core/music.ts";
 import { Ui } from "../../../forge/src/ui/ui.ts";
+import { Coach, showHowToPlay, tipsUpTo } from "../../../forge/src/ui/coach.ts";
 import { AdBudget } from "../../../forge/src/ui/ads.ts";
 import { buyCard } from "../../../forge/src/ui/buy-card.ts";
 import { showDailyCard as forgeDailyCard, recordDailyWin, currentStreak, dailyShareText } from "../../../forge/src/ui/daily.ts";
@@ -116,6 +121,8 @@ function yarnOf(slot: number): number {
 // Shared UI shell from forge (toasts, modals, buttons, flying chips).
 const ui = new Ui({ modalRoot: $("modal-root"), toast: $("toast"), fxLayer: $("fx-layer") });
 ui.onModalChange = (open) => (inModal = open);
+/** Onboarding: queued tips, power-up unlock cards, the pointing hand (forge coach). */
+const coach = new Coach(ui, { root: $("app"), blocked: () => inModal });
 const toast = (msg: string, ms?: number) => ui.toast(msg, ms);
 const floatText = (text: string, x: number, y: number) => ui.floatText(text, x, y);
 const flyPatch = (hex: string, from: { x: number; y: number }, to: { x: number; y: number }, delay: number) => ui.flyChip(hex, from, to, delay);
@@ -359,18 +366,20 @@ async function startLevel(n: number, opts: { easier?: boolean; override?: LevelD
   view.setHint(null);
   busy = false;
 
-  // Power-up gifts when they unlock.
+  // Power-up gifts when they unlock: a card explains each one (forge coach).
+  coach.clear();
   for (const pu of POWER_UPS) {
     if (n >= pu.unlockLevel && !d().gifted[pu.id]) {
       d().gifted[pu.id] = true;
       d().inv[pu.id] += ECONOMY.freeOnUnlock;
       save.touch();
-      setTimeout(() => toast(t("unlocked", { name: t(`pu_${pu.id}`), n: ECONOMY.freeOnUnlock }), 4200), 300);
+      coach.unlock(pu.icon, t(`pu_${pu.id}`), t(`pu_${pu.id}_desc`), ECONOMY.freeOnUnlock, $("powerups").querySelector<HTMLElement>(`[data-id="${pu.id}"]`));
     }
   }
-  const tip = EN[`tip_${n}`] ? t(`tip_${n}`) : "";
-  if (tip && (restarts.get(n) ?? 0) === 0) setTimeout(() => toast(tip, 5200), 700);
-  if (lvl.freeHint && (restarts.get(n) ?? 0) === (isStruggling() ? 1 : 2)) setTimeout(() => toast(t("freeHint")), 900);
+  const firstTry = (restarts.get(n) ?? 0) === 0;
+  if (EN[`tip_${n}`] && firstTry) coach.tip(t(`tip_${n}`), { point: introPoint(n) });
+  if (n === 1 && firstTry) coach.pointAt(firstMovePoint);
+  if (lvl.freeHint && (restarts.get(n) ?? 0) === (isStruggling() ? 1 : 2)) coach.tip(t("freeHint"), { icon: "💡" });
   renderHud();
   redrawMiniQuilt();
   // Offer the boost between levels only, never while the game is still loading (title screen).
@@ -472,7 +481,45 @@ async function onNeedleTap(i: number): Promise<void> {
   }
 }
 
+/** Level 1: the hand points at a needle to lift, then at where to put the loops. */
+function firstMovePoint(): { x: number; y: number } | null {
+  if (busy || playMode !== "levels" || def.n !== 1) return null;
+  const moves = legalMoves(board).filter((m) => m.kind === "move") as Array<{ kind: "move"; from: number; to: number }>;
+  if (selected >= 0) {
+    const m = moves.find((x) => x.from === selected);
+    return m ? view.needleTopClient(m.to) : null;
+  }
+  return moves.length ? view.needleTopClient(moves[0].from) : null;
+}
+
+/** Where the hand points while an intro level's tip is up: the needle showing the new thing. */
+function introPoint(n: number): (() => { x: number; y: number } | null) | undefined {
+  const needleWhere = (ok: (i: number) => boolean) => () => {
+    if (busy || def.n !== n) return null;
+    const i = board.stacks.findIndex((_, j) => ok(j));
+    return i < 0 ? null : view.needleTopClient(i);
+  };
+  if (n === 15) return needleWhere((i) => board.hidden[i].some(Boolean));
+  if (n === INTRO.twisted) return needleWhere((i) => board.stacks[i].some((v) => isTwisted(v)));
+  if (n === INTRO.knot) return needleWhere((i) => board.stacks[i].some((v) => isTied(v)));
+  if (n === INTRO.moth) return () => (busy || def.n !== n || !board.moth ? null : view.needleTopClient(board.moth.needle));
+  return undefined;
+}
+
+/** "How to play": the basics and twists met so far (from the level tips) and unlocked power-ups. */
+function showHelp(): Promise<void> {
+  const level = Math.max(d().level, playMode === "levels" ? def.n : 1);
+  // Tips 8, 25 and 40 only restate a power-up; the power-up section covers those.
+  const tips = tipsUpTo(EN, level, 10, [8, 25, 40]);
+  return showHowToPlay(ui, [
+    { title: t("htpBasics"), items: tips.basics.map((text) => ({ icon: "🧶", text })) },
+    { title: t("htpPowerUps"), items: POWER_UPS.filter((p) => level >= p.unlockLevel || d().gifted[p.id]).map((p) => ({ icon: p.icon, title: t(`pu_${p.id}`), text: t(`pu_${p.id}_desc`) })) },
+    { title: t("htpTwists"), items: tips.twists.map((text) => ({ icon: "✨", text })) },
+  ]);
+}
+
 async function doMove(m: Move): Promise<void> {
+  coach.stopPointing();
   busy = true;
   snapshot();
   const amount = moveAmount(board, m);
@@ -1213,6 +1260,7 @@ function showSettings(): void {
     onChange: () => save.touch(),
     extra: (close) => [
       button(`🛍 ${t("shop")}`, "green", () => (close(), showShop())),
+      button(`❓ ${t("howToPlay")}`, "plain", () => (close(), void showHelp())),
       button(t("resetProgress"), "plain", async () => {
         if (!confirm(t("resetConfirm"))) return;
         await save.reset();
@@ -1245,6 +1293,7 @@ function showTitle(): Promise<void> {
       void showDailyCard();
     });
     el.append(daily);
+    el.append(button(`❓ ${t("howToPlay")}`, "plain", () => (leave(), void showHelp())));
     $("modal-root").append(el);
     inModal = true;
     requestAnimationFrame(() => drawQuilt(qc, quilt));

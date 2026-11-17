@@ -9,13 +9,15 @@ import { registerStrings, detectLanguage, setLanguage, t } from "../../../forge/
 import { Rng, seedOf, utcDayKey } from "../../../forge/src/core/rng.ts";
 import { Music } from "../../../forge/src/core/music.ts";
 import { Ui, starsRow, para } from "../../../forge/src/ui/ui.ts";
+import { Coach, showHowToPlay, tipsUpTo } from "../../../forge/src/ui/coach.ts";
 import { AdBudget, interstitialDue } from "../../../forge/src/ui/ads.ts";
 import { buyCard } from "../../../forge/src/ui/buy-card.ts";
 import { showDailyCard as forgeDailyCard, recordDailyWin, currentStreak, dailyShareText } from "../../../forge/src/ui/daily.ts";
 import { showShop as forgeShowShop } from "../../../forge/src/ui/shop.ts";
 import { showSettings as forgeShowSettings } from "../../../forge/src/ui/settings.ts";
 import type { Board, LevelDef, TapResult } from "./logic/rules.ts";
-import { BOX_SIZE, cloneBoard, drill, extraSlot, isCovered, isLocked, isStuck, isWon, magnet, newBoard, oilCan, routeFor, tap } from "./logic/rules.ts";
+import { BOX_SIZE, chainEnds, cloneBoard, drill, extraSlot, geom, isCovered, isFree, isLocked, isStuck, isWon, legalMoves, magnet, newBoard, oilCan, routeFor, tap } from "./logic/rules.ts";
+import { INTRO } from "./logic/generator.ts";
 import { getDaily, getLevel, solveInWorker } from "./game/levels.ts";
 import { GadgetProgress, nextGadget, roomOpen, roomsWithAllGadgets } from "./game/gadget.ts";
 import { defaultSave, SAVE_VERSION } from "./game/save.ts";
@@ -48,6 +50,8 @@ const music = new Music(sfx.synth, WORKSHOP_SONG);
 let inModal = false;
 const ui = new Ui({ modalRoot: $("modal-root"), toast: $("toast"), fxLayer: $("fx-layer") });
 ui.onModalChange = (open) => (inModal = open);
+/** Onboarding: queued tips, power-up unlock cards, the pointing hand (forge coach). */
+const coach = new Coach(ui, { root: $("app"), blocked: () => inModal });
 let save!: SaveSlot<SaveData>;
 let gadget!: GadgetProgress;
 let view!: WorkshopView;
@@ -348,19 +352,63 @@ async function startLevel(n: number, opts: { easier?: boolean; override?: LevelD
   if (lvl.easier) extraSlot(board);
   view.build(board, colourOf);
   busy = false;
+  coach.clear();
   for (const pu of POWER_UPS) {
     if (n >= pu.unlockLevel && !d().gifted[pu.id]) {
       d().gifted[pu.id] = true;
       d().inv[pu.id] += ECONOMY.freeOnUnlock;
       save.touch();
-      setTimeout(() => toast(t("unlocked", { name: t(`pu_${pu.id}`), n: ECONOMY.freeOnUnlock }), 4200), 300);
+      coach.unlock(pu.icon, t(`pu_${pu.id}`), t(`pu_${pu.id}_desc`), ECONOMY.freeOnUnlock, $("powerups").querySelector<HTMLElement>(`[data-id="${pu.id}"]`));
     }
   }
-  if (EN[`tip_${n}`] && (restarts.get(n) ?? 0) === 0) setTimeout(() => toast(t(`tip_${n}`), 5200), 700);
+  const firstTry = (restarts.get(n) ?? 0) === 0;
+  if (EN[`tip_${n}`] && firstTry) coach.tip(t(`tip_${n}`), { point: introPoint(n) });
+  if (n === 1 && firstTry) coach.pointAt(firstMovePoint);
   renderHud();
   renderBench();
   redrawGadget();
   if (started && (def.tag === "tricky" || def.tag === "masterpiece") && !lvl.easier && (restarts.get(n) ?? 0) === 0) await offerBoost();
+}
+
+/** Level 1: the hand points at a bolt that can go straight into a box. */
+function firstMovePoint(): { x: number; y: number } | null {
+  if (busy || playMode !== "levels" || def.n !== 1) return null;
+  const m = legalMoves(board).find((i) => (routeFor(board, def.bolts[i][2]) ?? -1) >= 0);
+  return m === undefined ? null : view.boltClient(m);
+}
+
+/** Where the hand points while an intro level's tip is up: the new thing on the board. */
+function introPoint(n: number): (() => { x: number; y: number } | null) | undefined {
+  const at = (find: () => { x: number; y: number } | null) => () => (busy || def.n !== n ? null : find());
+  const boltWhere = (ok: (i: number) => boolean) => at(() => {
+    const i = def.bolts.findIndex((_, j) => board.boltOn[j] && ok(j));
+    return i < 0 ? null : view.boltClient(i);
+  });
+  if (n === 4) return boltWhere((i) => isFree(board, i) && i === 0);
+  if (n === INTRO.hinge) return at(() => (def.pins.length ? view.worldClient(...geom(def).pinPos[0]) : null));
+  if (n === INTRO.rusty) return boltWhere((i) => !board.revealed[i]);
+  if (n === INTRO.glass) return boltWhere((i) => (def.plates[def.bolts[i][0]][5] & 1) === 1);
+  if (n === INTRO.padlock) return boltWhere((i) => isLocked(board, i));
+  if (n === INTRO.long) return boltWhere((i) => def.bolts[i][4] >= 0);
+  if (n === INTRO.chain)
+    return at(() => {
+      if (!def.chains.length) return null;
+      const [a, b] = chainEnds(board, 0);
+      return view.worldClient((a[0] + b[0]) / 2, (a[1] + b[1]) / 2);
+    });
+  return undefined;
+}
+
+/** "How to play": the basics and twists met so far (from the level tips) and unlocked power-ups. */
+function showHelp(): Promise<void> {
+  const level = Math.max(d().level, playMode === "levels" ? def.n : 1);
+  // Tips 8, 25 and 40 only restate a power-up; the power-up section covers those.
+  const tips = tipsUpTo(EN, level, 11, [8, 25, 40]);
+  return showHowToPlay(ui, [
+    { title: t("htpBasics"), items: tips.basics.map((text) => ({ icon: "🔩", text })) },
+    { title: t("htpPowerUps"), items: POWER_UPS.filter((p) => level >= p.unlockLevel || d().gifted[p.id]).map((p) => ({ icon: p.icon, title: t(`pu_${p.id}`), text: t(`pu_${p.id}_desc`) })) },
+    { title: t("htpTwists"), items: tips.twists.map((text) => ({ icon: "✨", text })) },
+  ]);
 }
 
 async function offerBoost(): Promise<void> {
@@ -394,6 +442,7 @@ async function onBoltTap(i: number): Promise<void> {
   if (mode === "magnet") return void toast(t("magnetPrompt"));
   if (!board.boltOn[i]) return;
   if (mode === "drill") return void onDrill(i);
+  coach.stopPointing();
   if (isLocked(board, i)) {
     const lockC = board.def.plates.map((p) => p[6]).find((c, p) => c >= 0 && (board.def.bolts[i][0] === p || board.def.bolts[i][4] === p));
     refuse(i, t("padlocked", { colour: BOLT_COLOURS[colourOf(lockC ?? 0) % BOLT_COLOURS.length].name.toLowerCase() }));
@@ -1183,6 +1232,7 @@ function showSettings(): void {
     extra: (close) => [
       button(`🛍 ${t("shop")}`, "green", () => (close(), showShop())),
       button(`🧰 ${t("workshop")}`, "plain", () => (close(), void showRoom())),
+      button(`❓ ${t("howToPlay")}`, "plain", () => (close(), void showHelp())),
       button(t("resetProgress"), "plain", async () => {
         if (!confirm(t("resetConfirm"))) return;
         await save.reset();
@@ -1211,6 +1261,7 @@ function showTitle(): Promise<void> {
     };
     el.append(button(n > 1 ? t("continueLevel", { n }) : t("play"), "", leave));
     el.append(button(`🔩 ${t("daily")}${d().daily.results[utcDayKey()] ? " ✓" : ""}`, "plain", () => (leave(), void showDailyCard())));
+    el.append(button(`❓ ${t("howToPlay")}`, "plain", () => (leave(), void showHelp())));
     $("modal-root").append(el);
     inModal = true;
     requestAnimationFrame(() => drawGadget(gc, gadget.gadget, gadget.filled, { paper: true }));

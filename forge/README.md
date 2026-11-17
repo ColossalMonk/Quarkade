@@ -22,6 +22,7 @@ The shared template every Quarkade game is built on. Games import from `forge/sr
 | `ui/daily.ts` | Daily puzzle: results, streaks, calendar, share text, and the daily card |
 | `ui/shop.ts` | Cosmetics shop with tabs, album/collection rewards, and an optional extra tab (the app's real-money store) |
 | `ui/settings.ts` | Settings modal: on/off rows, language picker, extra buttons |
+| `ui/coach.ts` | Onboarding for every game: a tip queue (one card at a time, never over the title screen or a modal), power-up unlock cards (icon, what it does, free uses, then the button pulses), a pointing hand that follows a screen point, and the "How to play" page (`showHowToPlay`, filled from a game's level tips with `tipsUpTo`). Its own text (`gotIt`, `newPowerUp`, `freeUses`, `howToPlay`, `htpBasics`, `htpPowerUps`, `htpTwists`, `htpMore`) is built in for all 10 languages; games set `--coach-low` (CSS) to where the card goes when it would cover the hand's target |
 | `ui/ui.css` | Shared styles for all of the above. Games define the colour variables listed at the top |
 | `app/app-extras.ts` | Phone app only: `makeAppExtras(products, reminderId)` gives in-app purchases (cordova-plugin-purchase) and the opt-in daily reminder (Local Notifications). Each game wraps it in its own `src/game/app-extras.ts` and imports that only when `VITE_PLATFORM === "app"` |
 | `tools/build-all.ts` | Builds a game for every platform, checks the asset budget, zips each build into `dist/zips/`, and writes per-platform extras such as Playgama's config |
