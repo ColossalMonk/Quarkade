@@ -1,0 +1,16 @@
+{
+  "appId": "com.quarkade.aislenine",
+  "appName": "Aisle Nine",
+  "webDir": "dist/app",
+  "android": {
+    "backgroundColor": "#f0dfc0"
+  },
+  "ios": {
+    "backgroundColor": "#f0dfc0"
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "iconColor": "#d9382f"
+    }
+  }
+}

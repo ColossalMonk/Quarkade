@@ -44,7 +44,7 @@ All titles are working titles. Before a game is released, check its name on the 
 | hc02 | Density ✅ v1.0 built | Sort | Tap | 2D | M |
 | hc03 | Unbolted ✅ v1.0 built (was "Screwball Workshop") | Sort | Tap | 2D (exact swing, no physics engine) | M |
 | hc04 | Snug Bento ✅ v1.0 built (was "Bento Snug") | Sort | Drag | 2D | M |
-| hc05 | Aisle Nine | Sort | Tap | 2.5D | M |
+| hc05 | Aisle Nine ✅ v1.0 built | Sort | Tap | 2.5D | M |
 | hc06 | Outbound | Escape | Tap | 2D | S |
 | hc07 | Harbor Hustle | Escape | Tap | 2.5D | M |
 | hc08 | Untwine | Escape | Drag | 2D | S |

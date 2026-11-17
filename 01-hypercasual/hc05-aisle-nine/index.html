@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#f0dfc0" />
+    <title>Aisle Nine</title>
+  </head>
+  <body>
+    <div id="app">
+      <div id="awning"></div>
+      <canvas id="board" aria-label="Display stand"></canvas>
+
+      <aside id="side">
+        <button id="side-display-btn" class="display-card" aria-label="Main Street"></button>
+        <div id="side-sub"></div>
+        <div id="side-stars"></div>
+        <div class="side-buttons">
+          <button id="side-daily" class="btn plain">🛒</button>
+          <button id="side-shop" class="btn plain">🛍</button>
+        </div>
+      </aside>
+
+      <header id="hud-top">
+        <button id="btn-menu" class="icon-btn" aria-label="Settings">☰</button>
+        <button id="btn-daily" class="icon-btn" aria-label="Daily Restock">📅</button>
+        <div class="lvl">
+          <div id="lvl-label">Level 1</div>
+          <div id="lvl-tag"></div>
+        </div>
+        <div id="coins" class="pill"><span class="coin">🪙</span><span id="coin-count">0</span></div>
+        <button id="mini-display-btn" class="display-card compact" aria-label="Main Street"></button>
+      </header>
+
+      <div id="hud-sub">
+        <span id="moves">Moves 0</span><span class="dot">·</span><span id="par">Par 0</span>
+        <span id="live-stars"><i>★</i><i>★</i><i>★</i></span>
+        <span id="brake-left"></span>
+      </div>
+
+      <div id="toast" role="status" aria-live="polite"></div>
+
+      <div id="counter">
+        <div class="counter-row">
+          <div id="cart" hidden><span class="lbl">🛒</span><span id="cart-items"></span></div>
+          <button id="customer" hidden aria-label="Customer"><span class="who">🧑</span><span class="want"></span></button>
+          <div id="basket" hidden></div>
+        </div>
+        <div class="counter-row">
+          <div id="stand-map"></div>
+          <button id="btn-turn" class="tool" aria-label="Turn"><span class="ic">⟳</span></button>
+        </div>
+      </div>
+
+      <footer id="hud-bottom">
+        <button id="btn-undo" class="tool" aria-label="Undo"><span class="ic">↶</span></button>
+        <div id="powerups"></div>
+        <button id="btn-hint" class="tool" aria-label="Hint"><span class="ic">💡</span><b id="hint-count"></b></button>
+        <button id="btn-restart" class="tool" aria-label="Restart"><span class="ic">⟲</span></button>
+      </footer>
+
+      <div id="fx-layer"></div>
+      <div id="modal-root"></div>
+      <div id="loading"><div class="spinner"></div></div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
