@@ -1,0 +1,616 @@
+[
+ {
+  "n": 1,
+  "caps": [
+   4,
+   4,
+   4
+  ],
+  "stacks": [
+   "aabb",
+   "bbaa",
+   ""
+  ],
+  "classes": [
+   3,
+   3
+  ],
+  "L": 4,
+  "par": 3,
+  "d": 1,
+  "tag": "tutorial"
+ },
+ {
+  "n": 2,
+  "caps": [
+   4,
+   4,
+   4,
+   4,
+   4
+  ],
+  "stacks": [
+   "aaac",
+   "bbba",
+   "cbcc",
+   "",
+   ""
+  ],
+  "classes": [
+   3,
+   3,
+   3
+  ],
+  "L": 4,
+  "par": 5,
+  "d": 6.25,
+  "tag": "tutorial"
+ },
+ {
+  "n": 3,
+  "caps": [
+   4,
+   4,
+   4,
+   4,
+   4
+  ],
+  "stacks": [
+   "cccb",
+   "bbac",
+   "aaab",
+   "",
+   ""
+  ],
+  "classes": [
+   3,
+   3,
+   3
+  ],
+  "L": 4,
+  "par": 5,
+  "d": 6.25,
+  "tag": "tutorial"
+ },
+ {
+  "n": 4,
+  "caps": [
+   4,
+   4,
+   4,
+   4,
+   4
+  ],
+  "stacks": [
+   "bbba",
+   "ccba",
+   "ccaa",
+   "",
+   ""
+  ],
+  "classes": [
+   2,
+   3,
+   3
+  ],
+  "L": 4,
+  "par": 5,
+  "d": 5.05,
+  "tag": "tutorial"
+ },
+ {
+  "n": 5,
+  "caps": [
+   4,
+   4,
+   4,
+   4,
+   4,
+   4
+  ],
+  "stacks": [
+   "ccdd",
+   "aaad",
+   "ccbb",
+   "bbad",
+   "",
+   ""
+  ],
+  "classes": [
+   3,
+   3,
+   3,
+   2
+  ],
+  "L": 4,
+  "par": 6,
+  "d": 7.1,
+  "tag": "tutorial"
+ },
+ {
+  "n": 6,
+  "caps": [
+   4,
+   4,
+   4,
+   4,
+   4,
+   4
+  ],
+  "stacks": [
+   "caab",
+   "aacd",
+   "dddb",
+   "ccbb",
+   "",
+   ""
+  ],
+  "classes": [
+   3,
+   2,
+   3,
+   2
+  ],
+  "L": 4,
+  "par": 7,
+  "d": 5.95,
+  "tag": "tutorial"
+ },
+ {
+  "n": 7,
+  "caps": [
+   4,
+   4,
+   4,
+   4,
+   4
+  ],
+  "stacks": [
+   "aaac",
+   "abbc",
+   "ccbb",
+   "",
+   ""
+  ],
+  "classes": [
+   4,
+   3,
+   3
+  ],
+  "L": 4,
+  "par": 5,
+  "d": 5.05,
+  "tag": "tutorial"
+ },
+ {
+  "n": 8,
+  "caps": [
+   4,
+   4,
+   4,
+   4,
+   4,
+   4
+  ],
+  "stacks": [
+   "baad",
+   "ccbd",
+   "aadd",
+   "ccbb",
+   "",
+   ""
+  ],
+  "classes": [
+   3,
+   3,
+   4,
+   2
+  ],
+  "L": 4,
+  "par": 7,
+  "d": 5.95,
+  "tag": "tutorial"
+ },
+ {
+  "n": 9,
+  "caps": [
+   4,
+   4,
+   4,
+   4,
+   4,
+   4,
+   4
+  ],
+  "stacks": [
+   "bbdd",
+   "aadd",
+   "cceb",
+   "ccae",
+   "aeeb",
+   "",
+   ""
+  ],
+  "classes": [
+   4,
+   3,
+   4,
+   2,
+   3
+  ],
+  "L": 4,
+  "par": 10,
+  "d": 6.9,
+  "tag": "tutorial"
+ },
+ {
+  "n": 10,
+  "caps": [
+   4,
+   4,
+   4,
+   4,
+   4,
+   4,
+   4
+  ],
+  "stacks": [
+   "dcae",
+   "dccb",
+   "aebe",
+   "ddae",
+   "acbb",
+   "",
+   ""
+  ],
+  "classes": [
+   3,
+   2,
+   3,
+   4,
+   2
+  ],
+  "L": 4,
+  "par": 15,
+  "d": 7.15,
+  "tag": "tricky"
+ },
+ {
+  "n": 11,
+  "caps": [
+   4,
+   4,
+   4,
+   4,
+   4,
+   4,
+   4
+  ],
+  "stacks": [
+   "eecd",
+   "aaed",
+   "ecdd",
+   "bbcc",
+   "aabb",
+   "",
+   ""
+  ],
+  "classes": [
+   4,
+   3,
+   3,
+   2,
+   4
+  ],
+  "L": 4,
+  "par": 10,
+  "d": 6.9,
+  "tag": "tutorial"
+ },
+ {
+  "n": 12,
+  "caps": [
+   4,
+   4,
+   4,
+   4,
+   4,
+   4,
+   4
+  ],
+  "stacks": [
+   "ddca",
+   "bbaa",
+   "eecc",
+   "bceb",
+   "ddea",
+   "",
+   ""
+  ],
+  "classes": [
+   2,
+   3,
+   3,
+   4,
+   3
+  ],
+  "L": 4,
+  "par": 11,
+  "d": 8.15,
+  "tag": "tutorial"
+ },
+ {
+  "n": 13,
+  "caps": [
+   4,
+   4,
+   4,
+   4,
+   4,
+   4,
+   4,
+   4
+  ],
+  "stacks": [
+   "cbbd",
+   "ccdd",
+   "fffe",
+   "edaa",
+   "bebe",
+   "cfaa",
+   "",
+   ""
+  ],
+  "classes": [
+   2,
+   3,
+   4,
+   2,
+   3,
+   4
+  ],
+  "L": 4,
+  "par": 13,
+  "d": 7.85,
+  "tag": "tutorial"
+ },
+ {
+  "n": 14,
+  "caps": [
+   4,
+   4,
+   4,
+   4,
+   4,
+   4,
+   4,
+   4
+  ],
+  "stacks": [
+   "bbfd",
+   "bbaa",
+   "edac",
+   "effc",
+   "ddcc",
+   "eefa",
+   "",
+   ""
+  ],
+  "classes": [
+   3,
+   4,
+   2,
+   3,
+   4,
+   3
+  ],
+  "L": 4,
+  "par": 14,
+  "d": 9.1,
+  "tag": "tutorial"
+ },
+ {
+  "n": 15,
+  "caps": [
+   4,
+   4,
+   4,
+   4,
+   4,
+   4,
+   4
+  ],
+  "stacks": [
+   "aAcc",
+   "dabb",
+   "eaBb",
+   "eeec",
+   "dddc",
+   "",
+   ""
+  ],
+  "classes": [
+   3,
+   2,
+   2,
+   4,
+   3
+  ],
+  "L": 4,
+  "par": 10,
+  "d": 7.3,
+  "tag": "tutorial"
+ },
+ {
+  "n": 16,
+  "caps": [
+   4,
+   4,
+   4,
+   4,
+   4,
+   4,
+   4
+  ],
+  "stacks": [
+   "ccbb",
+   "daae",
+   "eebb",
+   "caae",
+   "DDcd",
+   "",
+   ""
+  ],
+  "classes": [
+   3,
+   2,
+   4,
+   4,
+   3
+  ],
+  "L": 4,
+  "par": 11,
+  "d": 7.35,
+  "tag": "tutorial"
+ },
+ {
+  "n": 17,
+  "caps": [
+   4,
+   4,
+   4,
+   4,
+   4,
+   4,
+   4,
+   4
+  ],
+  "stacks": [
+   "bAad",
+   "fffb",
+   "fBea",
+   "ebdd",
+   "ceed",
+   "ccca",
+   "",
+   ""
+  ],
+  "classes": [
+   2,
+   3,
+   3,
+   2,
+   3,
+   4
+  ],
+  "L": 4,
+  "par": 14,
+  "d": 9.43,
+  "tag": "tutorial"
+ },
+ {
+  "n": 18,
+  "caps": [
+   4,
+   4,
+   4,
+   4,
+   4,
+   4,
+   4,
+   4
+  ],
+  "stacks": [
+   "bbce",
+   "ddce",
+   "aaac",
+   "fdac",
+   "fffe",
+   "dbbe",
+   "",
+   ""
+  ],
+  "classes": [
+   3,
+   3,
+   2,
+   4,
+   2,
+   4
+  ],
+  "L": 4,
+  "par": 13,
+  "d": 7.85,
+  "tag": "tutorial"
+ },
+ {
+  "n": 19,
+  "caps": [
+   4,
+   4,
+   4,
+   4,
+   4,
+   4,
+   4,
+   4
+  ],
+  "stacks": [
+   "cbee",
+   "dccf",
+   "bfab",
+   "AaAf",
+   "dddb",
+   "cfEe",
+   "",
+   ""
+  ],
+  "classes": [
+   3,
+   3,
+   4,
+   4,
+   2,
+   3
+  ],
+  "L": 4,
+  "par": 14,
+  "d": 9.6,
+  "tag": "tutorial"
+ },
+ {
+  "n": 20,
+  "caps": [
+   4,
+   4,
+   4,
+   4,
+   4,
+   4,
+   4,
+   4
+  ],
+  "stacks": [
+   "dFfb",
+   "aadd",
+   "cfee",
+   "cdBb",
+   "acfb",
+   "acEe",
+   "",
+   ""
+  ],
+  "classes": [
+   4,
+   2,
+   4,
+   3,
+   2,
+   3
+  ],
+  "L": 4,
+  "par": 16,
+  "d": 8.5,
+  "tag": "tutorial"
+ }
+]

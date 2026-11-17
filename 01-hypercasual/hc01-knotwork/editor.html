@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Knotwork level editor (dev)</title>
+    <style>
+      body { font: 15px system-ui, sans-serif; margin: 0; background: #f6ead4; color: #5a3d29; }
+      main { display: grid; grid-template-columns: minmax(320px, 420px) 1fr; gap: 16px; padding: 16px; }
+      textarea, input { font: 14px ui-monospace, Consolas, monospace; width: 100%; box-sizing: border-box; border-radius: 8px; border: 1px solid #c9a982; padding: 8px; background: #fff8ec; }
+      textarea { height: 260px; }
+      button { font: 600 14px system-ui; padding: 8px 12px; border-radius: 8px; border: 0; background: #e2725b; color: #fff; cursor: pointer; margin: 4px 4px 0 0; }
+      button.alt { background: #8a6a50; }
+      pre { background: #fff8ec; border-radius: 8px; padding: 10px; white-space: pre-wrap; min-height: 120px; }
+      canvas { background: #c48a55; border-radius: 12px; width: 100%; max-width: 760px; }
+      label { display: block; margin-top: 10px; font-weight: 700; }
+      .row { display: flex; gap: 8px; }
+      .row input { flex: 1; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section>
+        <h2 style="margin:0 0 6px">Level editor</h2>
+        <p style="margin:0">One needle per line: <code>capacity:loops</code>, bottom → top.
+          <code>a</code>–<code>l</code> colour, <code>A</code> hidden, <code>(ab)</code> twisted, <code>~</code> after a loop = tied to the one above.</p>
+        <label>Needles</label>
+        <textarea id="needles">4:aabb
+4:bbaa
+4:</textarea>
+        <label>Moth (needle,count — blank for none)</label>
+        <input id="moth" placeholder="e.g. 0,6" />
+        <label>Load</label>
+        <div class="row"><input id="loadN" type="number" value="45" min="1" /><button class="alt" id="load">Level N</button><button class="alt" id="gen">Generate N</button></div>
+        <div>
+          <button id="solve">Solve + rate</button>
+          <button id="play">Play in game</button>
+          <button id="save" class="alt">Save JSON</button>
+        </div>
+        <pre id="out"></pre>
+      </section>
+      <section><canvas id="view" width="1200" height="760"></canvas></section>
+    </main>
+    <script type="module" src="/src/dev/editor.ts"></script>
+  </body>
+</html>

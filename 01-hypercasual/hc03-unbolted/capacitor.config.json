@@ -1,0 +1,16 @@
+{
+  "appId": "com.quarkade.unbolted",
+  "appName": "Unbolted",
+  "webDir": "dist/app",
+  "android": {
+    "backgroundColor": "#f1e1c6"
+  },
+  "ios": {
+    "backgroundColor": "#f1e1c6"
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "iconColor": "#e0702a"
+    }
+  }
+}

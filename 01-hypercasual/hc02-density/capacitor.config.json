@@ -1,0 +1,16 @@
+{
+  "appId": "com.quarkade.density",
+  "appName": "Density",
+  "webDir": "dist/app",
+  "android": {
+    "backgroundColor": "#f3ead8"
+  },
+  "ios": {
+    "backgroundColor": "#f3ead8"
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "iconColor": "#2f8fc0"
+    }
+  }
+}

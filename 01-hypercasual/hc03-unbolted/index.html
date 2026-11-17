@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#dcc29d" />
+    <title>Unbolted</title>
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="board" aria-label="Pegboard"></canvas>
+
+      <aside id="side">
+        <button id="side-gadget-btn" aria-label="Workshop"><canvas id="side-gadget"></canvas></button>
+        <div id="side-title"></div>
+        <div id="side-sub"></div>
+        <div id="side-stars"></div>
+        <div class="side-buttons">
+          <button id="side-daily" class="btn plain">🔩</button>
+          <button id="side-shop" class="btn plain">🛍</button>
+        </div>
+      </aside>
+
+      <header id="hud-top">
+        <button id="btn-menu" class="icon-btn" aria-label="Settings">☰</button>
+        <button id="btn-daily" class="icon-btn" aria-label="Daily Teardown">📅</button>
+        <div class="lvl">
+          <div id="lvl-label">Level 1</div>
+          <div id="lvl-tag"></div>
+        </div>
+        <div id="coins" class="pill"><span class="coin">🪙</span><span id="coin-count">0</span></div>
+        <button id="mini-gadget-btn" aria-label="Workshop"><canvas id="mini-gadget"></canvas></button>
+      </header>
+
+      <div id="hud-sub">
+        <span id="moves">Detours 0</span><span class="dot">·</span><span id="par">Par 0</span>
+        <span id="live-stars"><i>★</i><i>★</i><i>★</i></span>
+      </div>
+
+      <div id="toast" role="status" aria-live="polite"></div>
+
+      <div id="bench">
+        <div id="boxes"></div>
+        <div id="tray" aria-label="Tray"></div>
+      </div>
+
+      <footer id="hud-bottom">
+        <button id="btn-undo" class="tool" aria-label="Undo"><span class="ic">↶</span><b id="undo-count">2</b></button>
+        <div id="powerups"></div>
+        <button id="btn-hint" class="tool" aria-label="Hint"><span class="ic">💡</span><b id="hint-count"></b></button>
+        <button id="btn-restart" class="tool" aria-label="Restart"><span class="ic">⟲</span></button>
+      </footer>
+
+      <div id="fx-layer"></div>
+      <div id="modal-root"></div>
+      <div id="loading"><div class="spinner"></div></div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

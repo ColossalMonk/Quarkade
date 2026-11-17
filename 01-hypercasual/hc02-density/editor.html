@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Density level editor (dev)</title>
+    <style>
+      body { font: 15px system-ui, sans-serif; margin: 0; background: #eef3f6; color: #2c3d48; }
+      main { display: grid; grid-template-columns: minmax(320px, 440px) 1fr; gap: 16px; padding: 16px; }
+      textarea, input { font: 14px ui-monospace, Consolas, monospace; width: 100%; box-sizing: border-box; border-radius: 8px; border: 1px solid #9fb7c6; padding: 8px; background: #fff; }
+      textarea { height: 220px; }
+      button { font: 600 14px system-ui; padding: 8px 12px; border-radius: 8px; border: 0; background: #2f8fc0; color: #fff; cursor: pointer; margin: 4px 4px 0 0; }
+      button.alt { background: #5b7384; }
+      pre { background: #fff; border-radius: 8px; padding: 10px; white-space: pre-wrap; min-height: 120px; }
+      canvas { background: #d9cbb0; border-radius: 12px; width: 100%; max-width: 820px; }
+      label { display: block; margin-top: 10px; font-weight: 700; }
+      .row { display: flex; gap: 8px; }
+      .row input { flex: 1; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section>
+        <h2 style="margin:0 0 6px">Density level editor</h2>
+        <p style="margin:0">One flask per line: <code>capacity:units</code>, bottom → top. <code>a</code>–<code>p</code> = liquid slot,
+          <code>A</code> = murky. Flasks must be settled by weight (heaviest at the bottom); <b>Settle</b> fixes that.</p>
+        <label>Flasks</label>
+        <textarea id="flasks">4:aabb
+4:bbaa
+4:</textarea>
+        <label>Weight of each slot (a, b, c… in order; 1 foam · 2 oil · 3 water · 4 syrup · 5 mercury)</label>
+        <input id="classes" value="3,3" />
+        <label>Corks (flask:count, comma separated; blank for none)</label>
+        <input id="corks" placeholder="e.g. 2:1, 5:2" />
+        <label>Load</label>
+        <div class="row"><input id="loadN" type="number" value="45" min="1" /><button class="alt" id="load">Level N</button><button class="alt" id="gen">Generate N</button></div>
+        <div>
+          <button id="settle" class="alt">Settle</button>
+          <button id="solve">Solve + rate</button>
+          <button id="play">Play in game</button>
+          <button id="save" class="alt">Save JSON</button>
+        </div>
+        <pre id="out"></pre>
+      </section>
+      <section><canvas id="view" width="1300" height="820"></canvas></section>
+    </main>
+    <script type="module" src="/src/dev/editor.ts"></script>
+  </body>
+</html>

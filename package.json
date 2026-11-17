@@ -1,0 +1,20 @@
+{
+  "name": "quarkade",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "forge",
+    "01-hypercasual/hc01-knotwork",
+    "01-hypercasual/hc02-density",
+    "01-hypercasual/hc03-unbolted"
+  ],
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "@types/three": "^0.169.0",
+    "typescript": "^5.6.0",
+    "vite": "^5.4.0"
+  },
+  "dependencies": {
+    "three": "^0.169.0"
+  }
+}
