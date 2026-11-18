@@ -8,7 +8,8 @@
     "01-hypercasual/hc02-density",
     "01-hypercasual/hc03-unbolted",
     "01-hypercasual/hc04-snug-bento",
-    "01-hypercasual/hc05-aisle-nine"
+    "01-hypercasual/hc05-aisle-nine",
+    "01-hypercasual/hc06-koi-out"
   ],
   "devDependencies": {
     "@types/node": "^22.20.5",

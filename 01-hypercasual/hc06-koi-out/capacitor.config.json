@@ -1,0 +1,16 @@
+{
+  "appId": "com.quarkade.koiout",
+  "appName": "Koi Out",
+  "webDir": "dist/app",
+  "android": {
+    "backgroundColor": "#2b4a3a"
+  },
+  "ios": {
+    "backgroundColor": "#2b4a3a"
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "iconColor": "#d9452e"
+    }
+  }
+}
